@@ -77,8 +77,8 @@ def main():
         key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
         req_url = start + query + key_url
 
-        res = requests.get(req_url).json()
-        print(res)
+        req = (requests.get(req_url).json()
+        print req
         
 
 if __name__ == '__main__':
