@@ -79,9 +79,11 @@ def main():
         req_url = start + query + key_url
 
         res = requests.get(req_url).json()
-        print(res['results'][0]['place_id'])
+        try:
+            print(res['results'][0]['place_id'])
+        except IndexError:
+            print("No results")
         
-
 if __name__ == '__main__':
     main()
 
