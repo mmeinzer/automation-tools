@@ -74,16 +74,25 @@ def main():
     for row in values:
         mapping = {'query': row[0]}
         query = urllib.urlencode(mapping)
-        start = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
+        start_text = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
+        start_details = "https://maps.googleapis.com/maps/api/place/details/json?"
         key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
-        req_url = start + query + key_url
+        req_url_text = start_text + query + key_url
 
-        res = requests.get(req_url).json()
+        res = requests.get(req_url_text).json()
         try:
-            print(res['results'][0]['place_id'])
+            mapping = {'place_id': res['results'][0]['place_id']}
+            place_id = urllib.urlencode(mapping)
+            req_url_details = start_details + place_id + key_url
+            res = requests.get(req_url_details).json()
+            print(res['result']['website'])
+            print(res['result']['formatted_phone_number'])
+            print(res['result']['formatted_address'])
+            print()
         except IndexError:
             print("No results")
-        
+            print()
+            
 if __name__ == '__main__':
     main()
 
