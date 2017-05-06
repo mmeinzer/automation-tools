@@ -70,28 +70,48 @@ def main():
     result = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=rangeName).execute()
     values = result.get('values', [])
+    start_details = "https://maps.googleapis.com/maps/api/place/details/json?"
+    start_text = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
+    key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
 
     for row in values:
         mapping = {'query': row[0]}
         query = urllib.urlencode(mapping)
-        start_text = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
-        start_details = "https://maps.googleapis.com/maps/api/place/details/json?"
-        key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
         req_url_text = start_text + query + key_url
-
         res = requests.get(req_url_text).json()
+
         try:
+            #if no results the index [0] is out of range
             mapping = {'place_id': res['results'][0]['place_id']}
-            place_id = urllib.urlencode(mapping)
-            req_url_details = start_details + place_id + key_url
-            res = requests.get(req_url_details).json()
-            print(res['result']['website'])
-            print(res['result']['formatted_phone_number'])
-            print(res['result']['formatted_address'])
-            print()
         except IndexError:
-            print("No results")
+            #if no search results proceed to the next search item
+            print("No Search Results")
             print()
+            continue
+        
+        place_id = urllib.urlencode(mapping)
+        req_url_details = start_details + place_id + key_url
+        res = requests.get(req_url_details).json()
+        
+        try:
+            website_url = res['result']['website']
+        except KeyError:
+            website_url = "None Found"
+
+        try:
+            phone_number = res['result']['formatted_phone_number']
+        except KeyError:
+            phone_number = "None Found"
+
+        try:
+            address = res['result']['formatted_address']
+        except KeyError:
+            address = "None Found"
+
+        print("URL:     " + website_url)
+        print("Phone:   " + phone_number)
+        print("Address: " + address)
+        print()
             
 if __name__ == '__main__':
     main()
