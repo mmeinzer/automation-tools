@@ -78,9 +78,8 @@ def main():
         key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
         req_url = start + query + key_url
 
-        res = requests.get(req_url).text.encode('utf-8')
-        #node = res['place_id']
-        print(str(res))
+        res = requests.get(req_url).json()
+        print(res['results'][0]['place_id'])
         
 
 if __name__ == '__main__':
