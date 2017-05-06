@@ -71,7 +71,11 @@ def main():
 
     for row in values:
         mapping = {'query': row[0]}
-        print(urllib.urlencode(mapping))
+        query = urllib.urlencode(mapping)
+        start = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
+        key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
+        req_url = start + query + key_url
+        print(req_url)
 
 if __name__ == '__main__':
     main()
