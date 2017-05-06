@@ -2,6 +2,7 @@ from __future__ import print_function
 import httplib2
 import os
 import urllib
+import requests
 
 from apiclient import discovery
 from oauth2client import client
@@ -75,7 +76,10 @@ def main():
         start = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
         key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
         req_url = start + query + key_url
-        print(req_url)
+
+        req = (requests.get(req_url).json();
+        print(req);
+        
 
 if __name__ == '__main__':
     main()
