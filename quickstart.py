@@ -3,6 +3,7 @@ import httplib2
 import os
 import urllib
 import requests
+import json
 
 from apiclient import discovery
 from oauth2client import client
@@ -77,8 +78,9 @@ def main():
         key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
         req_url = start + query + key_url
 
-        res = requests.get(req_url).json()
-        print(res)
+        res = requests.get(req_url).text.encode('utf-8')
+        #node = res['place_id']
+        print(str(res))
         
 
 if __name__ == '__main__':
