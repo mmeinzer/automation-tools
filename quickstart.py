@@ -1,6 +1,7 @@
 from __future__ import print_function
 import httplib2
 import os
+import urllib
 
 from apiclient import discovery
 from oauth2client import client
@@ -68,14 +69,9 @@ def main():
         spreadsheetId=spreadsheetId, range=rangeName).execute()
     values = result.get('values', [])
 
-    if not values:
-        print('No data found.')
-    else:
-        print('Name, Major:')
-        for row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
-            print('%s' % (row[0]))
-
+    for row in values:
+        mapping = {'query': row[0]}
+        print(urllib.urlencode(mapping))
 
 if __name__ == '__main__':
     main()
