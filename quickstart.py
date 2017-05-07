@@ -18,7 +18,7 @@ except ImportError:
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
-SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
+SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Google Sheets API Python Quickstart'
 
@@ -65,14 +65,18 @@ def main():
     service = discovery.build('sheets', 'v4', http=http,
                               discoveryServiceUrl=discoveryUrl)
 
-    spreadsheetId = '1FbW7phhfvLR1oseNJg-zd-LkrzFR9hYCGTlLnrDmRSg'
+    spreadsheet_id = '1FbW7phhfvLR1oseNJg-zd-LkrzFR9hYCGTlLnrDmRSg'
     rangeName = 'Businesses!A2:A'
     result = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheetId, range=rangeName).execute()
+        spreadsheetId=spreadsheet_id, range=rangeName).execute()
     values = result.get('values', [])
     start_details = "https://maps.googleapis.com/maps/api/place/details/json?"
     start_text = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
     key_url = "&key=AIzaSyAamv8TVOVdduhy0FCPYwIXOEtmZkMw-DY"
+
+    websites = []
+    phone_numbers = []
+    addresses = []
 
     for row in values:
         mapping = {'query': row[0]}
@@ -87,6 +91,9 @@ def main():
             #if no search results proceed to the next search item
             print("No Search Results")
             print()
+            websites.append("No Search Results")
+            phone_numbers.append("No Search Results")
+            addresses.append("No Search Results")
             continue
         
         place_id = urllib.urlencode(mapping)
@@ -105,6 +112,8 @@ def main():
 
         try:
             address = res['result']['formatted_address']
+            if "MN" not in address:
+                address = "Not in MN"
         except KeyError:
             address = "None Found"
 
@@ -112,7 +121,18 @@ def main():
         print("Phone:   " + phone_number)
         print("Address: " + address)
         print()
-            
+
+        websites.append(website_url)
+        phone_numbers.append(phone_number)
+        addresses.append(address)
+
+    values = [websites, phone_numbers, addresses]
+    body = {'values': values, 'majorDimension': 'COLUMNS'}
+    write_range = 'Businesses!E2'
+    result = service.spreadsheets().values().update(
+        spreadsheetId=spreadsheet_id, range=write_range,
+        valueInputOption="USER_ENTERED", body=body).execute()
+                
 if __name__ == '__main__':
     main()
 
