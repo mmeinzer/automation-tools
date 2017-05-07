@@ -1,16 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+urls = ["http://www.python.org", "http://ajcpa.com/", "http://www.aemcpas.com/"]
+
 def main():
-    driver = webdriver.Chrome()
-    driver.get("http://www.python.org")
-    assert "Python" in driver.title
-    elem = driver.find_element_by_name("q")
-    elem.clear()
-    elem.send_keys("pycon")
-    elem.send_keys(Keys.RETURN)
-    assert "No results found." not in driver.page_source
-    driver.close()
+    driver = webdriver.Chrome("/home/matt/Downloads/chromedriver")
+    for url in urls:
+        driver.get(url)
+        rating = raw_input("Rate this site (1-3): ")
+        print(rating)
 
 if __name__ == '__main__':
     main()
